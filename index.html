@@ -3,114 +3,352 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ninja launcher</title>
+    <title>Ninja Launcher</title>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code&display=swap" rel="stylesheet">
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    
+    <!-- CSS Externo (opcional) -->
+    <link rel="stylesheet" href="style.css">
 
     <!-- Particles.js -->
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+    <!-- Font Awesome (para ícones) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js" crossorigin="anonymous"></script>
+
+    <style>
+        /* NAVEGAÇÃO */
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10,10,13,0.8);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(0,255,136,0.2);
+            z-index: 999;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            display: flex;
+            gap: 20px;
+        }
+        nav a { 
+            color: var(--text); 
+            text-decoration: none; 
+            font-weight: 600; 
+            padding: 8px 16px; 
+            border-radius: 12px; 
+            transition: 0.3s; 
+        }
+        nav a:hover { 
+            background: rgba(0,255,136,0.2); 
+            color: #00ff88; 
+        }
+        nav a.active { 
+            background: rgba(0,255,136,0.3); 
+            color: #000; 
+            font-weight: 700; 
+        }
+
+        /* BOTÃO PREMIUM */
+        .btn-download { 
+            position: relative; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 14px; 
+            background: linear-gradient(135deg, #00ff88, #00cc66); 
+            color: #000; 
+            font-weight: 700; 
+            font-size: 1.15rem; 
+            padding: 18px 44px; 
+            border-radius: 16px; 
+            text-decoration: none; 
+            overflow: hidden; 
+            box-shadow: 0 0 20px rgba(0,255,136,0.6), 0 0 40px rgba(0,255,136,0.3), inset 0 2px 8px rgba(255,255,255,0.3); 
+            transition: all 0.4s cubic-bezier(0.25,0.8,0.25,1); 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            animation: pulse 2s infinite; 
+            margin-top: 16px; 
+        }
+        .btn-download:hover { 
+            transform: translateY(-4px) scale(1.02); 
+            box-shadow: 0 0 30px rgba(0,255,136,0.8), 0 0 60px rgba(0,255,136,0.5), inset 0 2px 12px rgba(255,255,255,0.4); 
+        }
+        .btn-glow { 
+            position: absolute; 
+            top: 0; left: 0; right: 0; bottom: 0; 
+            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 50%); 
+            border-radius: 16px; 
+            transform: translateX(-100%); 
+            transition: transform 0.6s ease; 
+        }
+        .btn-download:hover .btn-glow { 
+            transform: translateX(100%); 
+        }
+        .btn-text { 
+            position: relative; 
+            z-index: 2; 
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2); 
+        }
+        .btn-badge { 
+            background: rgba(0,0,0,0.2); 
+            color: #000; 
+            font-size: 0.7rem; 
+            font-weight: 800; 
+            padding: 4px 10px; 
+            border-radius: 8px; 
+            border: 1px solid rgba(0,0,0,0.3); 
+            backdrop-filter: blur(4px); 
+        }
+        @keyframes pulse { 
+            0%, 100% { box-shadow: 0 0 20px rgba(0,255,136,0.6), 0 0 40px rgba(0,255,136,0.3); } 
+            50% { box-shadow: 0 0 30px rgba(0,255,136,0.9), 0 0 60px rgba(0,255,136,0.5); } 
+        }
+
+        /* CARDS */
+        .feature { 
+            display: flex; 
+            align-items: center; 
+            gap: 16px; 
+            background: var(--card); 
+            padding: 20px 24px; 
+            border-radius: 16px; 
+            border-left: 3px solid var(--accent); 
+            transition: all 0.3s ease; 
+        }
+        .feature:hover { 
+            transform: translateX(8px); 
+        }
+        .feature .icon { 
+            font-size: 1.6rem; 
+            width: 40px; 
+            text-align: center; 
+            flex-shrink: 0; 
+            color: #00ff88; 
+        }
+        .feature h3 { 
+            font-size: 1.1rem; 
+            color: var(--text); 
+            margin: 0 0 4px 0; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+        }
+        .feature p { 
+            font-size: 0.9rem; 
+            color: var(--muted); 
+            margin: 0; 
+            line-height: 1.4; 
+        }
+    </style>
 </head>
 <body>
+
+    <!-- Matrix Loader -->
+    <div id="matrix-loader">
+        <div class="matrix">NINJA MAIN LOADING...</div>
+    </div>
 
     <!-- Partículas -->
     <div id="particles-js"></div>
 
-    <div class="container">
+    <!-- Navegação -->
+    <nav>
+        <a href="index.html" class="active">Home</a>
+        <a href="updates.html">Updates</a>
+    </nav>
 
-        <!-- Header -->
-        <header>
-            <h1 class="logo">ninja</h1>
-            <p class="tagline">The Ninja Xiter</p>
+    <main class="container" id="main-content" style="margin-top: 80px; opacity: 0; transition: opacity 0.6s;">
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="theme-btn">
+            <span class="icon-light">Sun</span>
+            <span class="icon-dark">Moon</span>
+        </button>
+
+        <!-- Hero -->
+        <header class="hero">
+            <div class="logo-wrapper">
+                <img src="ninja-logo.png" alt="Ninja" oni class="ninja-logo">
+                <div class="smoke"></div>
+            </div>
+            <h1 class="title" id="typing-title">ninja</h1>
+            <p class="subtitle">The Silent Xiter</p>
         </header>
 
         <!-- Download Card -->
-        <div class="download-card">
-            <div class="version">v1.101.1</div>
-            <p class="meta">Windows 10/11 • PIE-64 • via HD-Player </p>
-            <div class="sha">
-                <code>atualização do free fire OB51...</code>
+        <section class="download-section">
+            <div class="card">
+                <div class="version-tag">v1.101.1</div>
+                <p class="meta">Windows 10/11 • 64-bit • HD-Player</p>
+                <div class="hash"><code>OB51 Update Ready</code></div>
+
+                <!-- Botão Premium -->
+                <a href="#" class="btn-download" id="download-btn">
+                    <span class="btn-text">BAIXAR AGORA</span>
+                    <span class="btn-badge">NEW</span>
+                    <div class="btn-glow"></div>
+                </a>
+
+                <p class="status">Downloads via GitHub temporariamente pausados.</p>
+                <p class="download-counter" id="download-counter">Total de downloads: <strong>12.850</strong></p>
             </div>
+        </section>
 
-            <!-- DOWNLOAD VIA JSDelivr (CDN + GitHub) -->
-            <a href="https://github.com/gordoxitado/newlauncherexgg/archive/refs/heads/main.zip" 
-               class="download-btn" download>
-                <i class="fas fa-download"></i> BAIXAR AGORA
-                <span class="badge">New</span>
-            </a>
-
-            <p style="margin-top: 16px; font-size: 0.9rem; color: #888;">
-                Downloads via github estão temporariamente desativados.
-            </p>
-        </div>
-
-        <!-- Info -->
-        <div class="info-grid">
-            <div class="info-item">
-                <h3><i class="fas fa-rocket"></i> Instantâneo</h3>
-                <p>Inicia em < 800ms. superlight.</p>
+        <!-- Features com ÍCONES CORRETOS -->
+        <section class="features">
+            <div class="feature">
+                <div class="icon"><i class="fas fa-bolt"></i></div>
+                <div>
+                    <h3>Instantâneo</h3>
+                    <p>Inicia em &lt; 800ms</p>
+                </div>
             </div>
-            <div class="info-item">
-                <h3><i class="fas fa-shield-alt"></i> Seguro</h3>
-                <p>funções atualizadas todo mês.</p>
+            <div class="feature">
+                <div class="icon"><i class="fas fa-lock"></i></div>
+                <div>
+                    <h3>Seguro</h3>
+                    <p>Atualizado mensalmente</p>
+                </div>
             </div>
-            <div class="info-item">
-                <h3><i class="fas fa-cogs"></i> updates?</h3>
-                <p>o nosso painel e atualizado
-                     constantemente</p>
+            <div class="feature">
+                <div class="icon"><i class="fas fa-sync-alt"></i></div>
+                <div>
+                    <h3>Atualizações</h3>
+                    <p>Painel sempre ativo</p>
+                </div>
             </div>
-        </div>
+        </section>
+    </main>
 
-    </div>
-
-    <!-- Footer -->
     <footer>
-        <p>
-           
-            </a>
-        </p>
+        <p>ninja.gg</p>
     </footer>
 
-    <!-- Font Awesome -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+    <!-- Som de Shuriken -->
+    <audio id="shuriken-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-fast-sword-swoosh-2791.mp3" preload="auto"></audio>
 
-    <!-- Particles.js (suave, estilo Ghost) -->
+    <!-- SCRIPTS -->
     <script>
+        // === MATRIX LOADER ===
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('matrix-loader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('matrix-loader').remove();
+                    document.getElementById('main-content').style.opacity = '1';
+                    startTyping();
+                }, 600);
+            }, 2000);
+        });
+
+        // === EFEITO DE DIGITAÇÃO ===
+        function startTyping() {
+            const text = "ninja";
+            const el = document.getElementById('typing-title');
+            el.innerHTML = "";
+            let i = 0;
+            const timer = setInterval(() => {
+                el.innerHTML += text[i++];
+                if (i >= text.length) clearInterval(timer);
+            }, 200);
+        }
+
+        // === TEMA DARK/LIGHT ===
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+        });
+
+        // === CONTADOR DE DOWNLOADS ===
+        let downloads = 12850;
+        const counter = document.getElementById('download-counter');
+        setInterval(() => {
+            if (Math.random() < 0.3) {
+                downloads += Math.floor(Math.random() * 3) + 1;
+                counter.innerHTML = `Total de downloads: <strong>${downloads.toLocaleString()}</strong>`;
+            }
+        }, 5000);
+
+        // === BOTÃO DOWNLOAD + SOM + CONTADOR ===
+        document.getElementById('download-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            const sound = document.getElementById('shuriken-sound');
+            sound.currentTime = 0;
+            sound.play();
+            downloads++;
+            counter.innerHTML = `Total de downloads: <strong>${downloads.toLocaleString()}</strong>`;
+        });
+
+        // === SHURIKENS REAIS (GRANDES E LENTAS) ===
+        document.getElementById('download-btn').addEventListener('mouseenter', () => {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const s = document.createElement('img');
+                    s.src = 'https://github.com/gordoxitado/shuriken/blob/main/shuriken.png?raw=true';
+                    s.alt = 'Shuriken';
+                    s.style.cssText = `
+                        position: fixed;
+                        left: ${Math.random() * window.innerWidth}px;
+                        top: 60%;
+                        width: 48px;
+                        height: 48px;
+                        pointer-events: none;
+                        z-index: 1000;
+                        filter: drop-shadow(0 0 12px rgba(0, 255, 136, 0.7));
+                        animation: shurikenFly 2s ease-out forwards;
+                        transform-origin: center;
+                    `;
+                    document.body.appendChild(s);
+                    setTimeout(() => s.remove(), 2000);
+                }, i * 120);
+            }
+        });
+
+        // === ANIMAÇÃO DOS SHURIKENS ===
+        const shurikenStyle = document.createElement('style');
+        shurikenStyle.textContent = `
+            @keyframes shurikenFly {
+                0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+                100% { transform: translateY(-350px) rotate(720deg) scale(0.4); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(shurikenStyle);
+
+        // === PARTÍCULAS INTERATIVAS ===
         particlesJS("particles-js", {
             "particles": {
-                "number": { "value": 50, "density": { "enable": true, "value_area": 800 } },
+                "number": { "value": 40 },
                 "color": { "value": "#00ff88" },
                 "shape": { "type": "circle" },
-                "opacity": { "value": 0.3, "random": true, "anim": { "enable": true, "speed": 0.5 } },
+                "opacity": { "value": 0.2, "random": true },
                 "size": { "value": 2.5, "random": true },
-                "line_linked": { "enable": false },
                 "move": {
                     "enable": true,
                     "speed": 1.2,
                     "direction": "none",
                     "random": true,
                     "straight": false,
-                    "out_mode": "out"
+                    "out_mode": "out",
+                    "attract": { "enable": true, "rotateX": 600, "rotateY": 1200 }
                 }
             },
             "interactivity": {
                 "detect_on": "canvas",
                 "events": {
-                    "onhover": { "enable": true, "mode": "repulse" },
+                    "onhover": { "enable": true, "mode": "grab" },
                     "onclick": { "enable": true, "mode": "push" },
                     "resize": true
                 },
                 "modes": {
-                    "repulse": { "distance": 80, "duration": 0.4 },
+                    "grab": { "distance": 140, "line_linked": { "opacity": 0.3 } },
                     "push": { "particles_nb": 3 }
                 }
             },
             "retina_detect": true
         });
     </script>
-
 </body>
 </html>
